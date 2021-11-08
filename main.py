@@ -1,4 +1,6 @@
 import random
+from dataclasses import dataclass
+
 import numpy as np
 import const
 from tkinter import *
@@ -6,29 +8,37 @@ from tkinter import *
 
 mesta = [[0 for i in range(2)] for j in range(const.POCET_MIEST)]
 zoznam = []          # pociatocne usporiadanie miest
-zaciatocny_stav = 0  # vektor pre zaciatocne zoradenie 0 - pocet-1
+zaciatocna_cesta = 0  # vektor pre zaciatocne zoradenie 0 - pocet-1
 zaciatocna_cesta = 0      # dlzka cesty pri zaciatocnom zoradeni
 najkratsia_cesta = 0
-najkratsia_cesta_stav = 0
+
+
+@dataclass
+class Stav:
+    stav = 0
+    dlzka_cesty: int = 0
+
+    def __init__(self, stav, dlzka: int):
+        self.stav = stav
+        self.dlzka_cesty = dlzka
 
 
 def vygeneruj_mesta(canvas: Canvas):
-    global zaciatocny_stav, zaciatocna_cesta
+    global zaciatocna_cesta, najkratsia_cesta
     # nahodne vygeneruje polohu miest, ich poradove cisla uklada do zoznamu
     for mesto in range(const.POCET_MIEST):
         mesta[mesto][0] = random.randint(1, const.VELKOST_PLOCHY)
         mesta[mesto][1] = random.randint(1, const.VELKOST_PLOCHY)
-        canvas.create_oval(2*mesta[mesto][0]-5, 2*mesta[mesto][1]-5, 2*mesta[mesto][0]+5, 2*mesta[mesto][1]+5, fill="green")
+        canvas.create_oval(2*mesta[mesto][0]-5, 2*mesta[mesto][1]-5,
+                           2*mesta[mesto][0]+5, 2*mesta[mesto][1]+5, fill="green")
         #print(mesta[mesto][0], mesta[mesto][1])
         zoznam.append(mesto)
 
     # vytvorenie vektora zaciatocneho stavu - cisla miest 0 - n-1
-    zaciatocny_stav = np.array(zoznam)
-    zaciatocna_cesta = vypocitaj_dlzku(zaciatocny_stav, canvas)
+    zaciatocna_cesta = Stav(np.array(zoznam), vypocitaj_dlzku(zaciatocna_cesta, canvas))
     # zaciatocna cesta je moomentalne najkratsia
     najkratsia_cesta = zaciatocna_cesta
-    najkratsia_cesta_stav = zaciatocny_stav
-    print("ZACIATOCNA DLZKA %.3f" % zaciatocna_cesta)
+    print("ZACIATOCNA DLZKA %.3f" % najkratsia_cesta.dlzka_cesty, najkratsia_cesta.stav)
 
 
 def vypocitaj_dlzku(stav, canvas: Canvas):
@@ -47,8 +57,8 @@ def vypocitaj_dlzku(stav, canvas: Canvas):
     return dlzka
 
 
-def prva_generacia(zaciatocny_stav):
-    
+#def prva_generacia(zaciatocny_stav):
+
 
 
 if __name__ == '__main__':
@@ -57,8 +67,8 @@ if __name__ == '__main__':
     canvas.configure(background="black")
     canvas.pack()
     vygeneruj_mesta(canvas)
-
-    prva_generacia(zaciatocny_stav)
+    print(najkratsia_cesta.stav)
+    #prva_generacia(zaciatocny_stav)
 
     root.mainloop()
 
