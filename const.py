@@ -4,9 +4,8 @@ POCET_MIEST = 20
 
 VELKOST_PLOCHY = 200
 
-VELKOST_TABU = 20
+VELKOST_TABU = 90
 
-POCET_GENERACII = 150
+POCET_GENERACII = 90
 
-N_TICE = 3  # pocet potomkov vybranych do jedneho turnaja
 MAX_INT = sys.maxsize
